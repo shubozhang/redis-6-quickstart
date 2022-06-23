@@ -38,18 +38,71 @@ Redis
 | `flushall`        | truncate all DBs                                                                      |
 
 
-### String
+### Strings
 * Redis Strings are binary safe, this means that a Redis string can contain any kind of data, for instance a JPEG image or 
 a serialized Ruby object. 
 * A String value can be at max 512 Megabytes in length.
 
-| commands                       | usage                                                                              |
-|--------------------------------|------------------------------------------------------------------------------------|
-| `set <key> <value>`            | upsert a <key, value>                                                              |
-| `get <key>`                    | get a value by key                                                                 |         
-| `append <key> <value>`         | append value to the end of original value                                          |
-| `strlen <key>`                 | get the length of the key                                                          |
-| `setnx <key> <value>`          | only insert when key does not exist                                                |
-| `incr  <key>`                  | (only works for number) increase value by 1. If pre_value is null, new value is 1  |
-| `decr  <key>`                  | (only works for number) decrease value by 1. If pre_value is null, new value is -1 |
-| `incrby / decrby  <key><step>` | (only works for number) increase / decrease value by step.                         |
+| commands                              | usage                                                                              |
+|---------------------------------------|------------------------------------------------------------------------------------|
+| `set <key> <value>`                   | upsert a <key, value>                                                              |
+| `mset <k1><k2><v1><v2>...`            | upsert multiple <key, value>: atomic                                               |
+| `get <key>`                           | get a value by key                                                                 |         
+| `mget <k1><k2><...>`                  | get multiple value by key                                                          |         
+| `append <key> <value>`                | append value to the end of original value                                          |
+| `strlen <key>`                        | get the length of the key                                                          |
+| `setnx <key> <value>`                 | upsert <k,v> when key does not exist                                               |
+| `msetnx <key> <value>`                | upsert multiple <k, v> when key does not exist: atomic                             |
+| `incr  <key>`                         | (only works for number) increase value by 1. If pre_value is null, new value is 1  |
+| `decr  <key>`                         | (only works for number) decrease value by 1. If pre_value is null, new value is -1 |
+| `incrby / decrby  <key><step>`        | (only works for number) increase / decrease value by step.                         |
+| `getrange <key> <start><end>`         | get values by key range                                                            |
+| `setrange  <key><start><value>`       | override value from index_start                                                    |
+| `setex <key><expiration_time><value>` | upsert a <k, v> with ttl                                                           |
+| `getset <key><value>`                 | update <k> to new value and return old one                                         |
+
+
+* String (value, not key) is stored as Simple Dynamic String(SDS) and mutable. It implements like Java ArrayList.
+
+
+### Lists
+Redis Lists are simply lists of strings, sorted by insertion order. It is possible to add elements to a Redis List 
+pushing new elements on the head (on the left) or on the tail (on the right) of the list, like double-linked list.
+
+* The max length of a list is 2^32 - 1 elements (4294967295, more than 4 billion of elements per list).
+
+
+| commands                                  | usage                                                          |
+|-------------------------------------------|----------------------------------------------------------------|
+| `lpush/rpush <k> <v1><v2>...`             | insert multiple values from left / right                       |
+| `lrange <k> <start> <end>`                | get values from index_start to index_end (from left to right)  |
+| `lpop/rpop  <key>`                        | pop a value from left / right                                  |
+| `rpoplpush  <key1><key2>`                 | <key1> pops a value from right and inserts it into <key2> left |
+| `lindex <key><index>`                     | get value by index (from left to right)                        |
+| `llen <key>`                              | get the length of the key                                      |
+| `linsert <key>  before <value><newvalue>` | insert <newvalue> after <value>                                |                                                               
+| `lrem <key><n><value>`                    | delete n values from left                                      |                                                               
+| `lset<key><index><value>`                 | update value at the index                                      |                                                               
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
