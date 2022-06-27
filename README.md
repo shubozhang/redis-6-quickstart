@@ -17,7 +17,7 @@ Redis
 2. Access `redis-cli`
 
 * `docker exec -it <container_id> redis-cli`
-  * example: `docker exec -it 534f0c59c14f5fad3945396574d3eabd61f570e1e8f2d089331c94b204413063 redis-cli`
+    * example: `docker exec -it 534f0c59c14f5fad3945396574d3eabd61f570e1e8f2d089331c94b204413063 redis-cli`
 
 ## Data Types
 
@@ -37,10 +37,11 @@ Redis
 | `flushdb`         | truncate current DB                                                                   |
 | `flushall`        | truncate all DBs                                                                      |
 
-
 ### Strings
-* Redis Strings are binary safe, this means that a Redis string can contain any kind of data, for instance a JPEG image or 
-a serialized Ruby object. 
+
+* Redis Strings are binary safe, this means that a Redis string can contain any kind of data, for instance a JPEG image
+  or
+  a serialized Ruby object.
 * A String value can be at max 512 Megabytes in length.
 
 | commands                              | usage                                                                              |
@@ -61,16 +62,14 @@ a serialized Ruby object.
 | `setex <key><expiration_time><value>` | upsert a <k, v> with ttl                                                           |
 | `getset <key><value>`                 | update <k> to new value and return old one                                         |
 
-
 * String (value, not key) is stored as Simple Dynamic String(SDS) and mutable. It implements like Java ArrayList.
 
-
 ### Lists
-Redis Lists are simply lists of strings, sorted by insertion order. It is possible to add elements to a Redis List 
+
+Redis Lists are simply lists of strings, sorted by insertion order. It is possible to add elements to a Redis List
 pushing new elements on the head (on the left) or on the tail (on the right) of the list, like double-linked list.
 
 * The max length of a list is 2^32 - 1 elements (4294967295, more than 4 billion of elements per list).
-
 
 | commands                                  | usage                                                          |
 |-------------------------------------------|----------------------------------------------------------------|
@@ -84,53 +83,45 @@ pushing new elements on the head (on the left) or on the tail (on the right) of 
 | `lrem <key><n><value>`                    | delete n values from left                                      |                                                               
 | `lset<key><index><value>`                 | update value at the index                                      |                                                               
 
-
 * `ziplist` is used when key has few elements
 * `quicklist` is used when key has more elements
 
-
-
 ### Sets
+
 * auto remove duplicates
 * unordered
 * `O(1)` on add / delete / get operations
 
+| commands                         | usage                                                                 |
+|----------------------------------|-----------------------------------------------------------------------|
+| sadd <key><value1><value2> ..... | Add one or more values to the key. Dup values will be ignored.        |       
+| smembers <key>                   | Get all values from the key.                                          |                                                 
+| sismember <key><value>           | Check if key contains the value. If true, returns 1. Otherwise 0.     |                                                 
+| scard<key>                       | Return the count of all values for the key.                           |                                                 
+| srem <key><value1><value2> ....  | Remove values from the key.                                           |                                                 
+| spop <key>                       | Pop a value from the key randomly.                                    |                                                 
+| srandmember <key><n>             | Get n values from the key randomly.                                   |                                                 
+| smove <source><destination>value | Move the value from source_key to destination_key.                    |                                                 
+| sinter <key1><key2>              | Return inter values from two keys                                     |                                                 
+| sunion <key1><key2>              | Return union values from two keys.                                    |                                                 
+| sdiff <key1><key2>               | Return diff values between key1 and key2. (only values exist in key1) |                                                 
 
-| commands                         | usage                                           |
-|----------------------------------|-------------------------------------------------|
-| sadd <key><value1><value2> ..... | 将一个或多个 member 元素加入到集合 key 中，已经存在的 member 元素将被忽略 |       
-| smembers <key>                   | 取出该集合的所有值。                                      |                                                 
-| sismember <key><value>           | 判断集合<key>是否为含有该<value>值，有1，没有0                  |                                                 
-| scard<key>                       | 返回该集合的元素个数。                                     |                                                 
-| srem <key><value1><value2> ....  | 删除集合中的某个元素。                                     |                                                 
-| spop <key>                       | 随机从该集合中吐出一个值。                                   |                                                 
-| srandmember <key><n>             | 随机从该集合中取出n个值。不会从集合中删除 。                         |                                                 
-| smove <source><destination>value | 把集合中一个值从一个集合移动到另一个集合                            |                                                 
-| sinter <key1><key2>              | 返回两个集合的交集元素。                                    |                                                 
-| sunion <key1><key2>              | 返回两个集合的并集元素。                                    |                                                 
-| sdiff <key1><key2>               | 返回两个集合的差集元素(key1中的，不包含key2中的)                   |                                                 
-
-
-* In Redis, set is implemented in data structure  dict.
-
+* In Redis, set is implemented in data structure dict.
 
 ### Hash
 
-| commands                                          | usage                                             |
-|---------------------------------------------------|---------------------------------------------------|
-| `hset <key><field><value>`                        | 给<key>集合中的  <field>键赋值<value>                     |
-| `hget <key1><field>`                              | 从<key1>集合<field>取出 value                          |
-| `hmset <key1><field1><value1><field2><value2>...` | 批量设置hash的值                                        |
-| `hexists<key1><field>`                            | 查看哈希表 key 中，给定域 field 是否存在。                       |
-| `hkeys <key>`                                     | 列出该hash集合的所有field                                 |
-| `hvals <key>`                                     | 列出该hash集合的所有value                                 |
-| `hincrby <key><field><increment>`                 | 为哈希表 key 中的域 field 的值加上增量 1   -1                  |
-| `hsetnx <key><field><value>`                      | 将哈希表 key 中的域 field 的值设置为 value ，当且仅当域 field 不存在 . |
+| commands                                          | usage                                                                |
+|---------------------------------------------------|----------------------------------------------------------------------|
+| `hset <key><field><value>`                        | add field to key set with value                                      |
+| `hget <key1><field>`                              | get field's value from key set                                       |
+| `hmset <key1><field1><value1><field2><value2>...` | add multiple hashes                                                  |
+| `hexists<key1><field>`                            | check if field exists in key set                                     |
+| `hkeys <key>`                                     | list all fields from the key set                                     |
+| `hvals <key>`                                     | list all values from the key set                                     |
+| `hincrby <key><field><increment>`                 | increment 1 on value for the field in key set                        |
+| `hsetnx <key><field><value>`                      | add field to key set with value only an if only field does not exist |
 
-
-
-### Zset(sorted set) 
-
+### Zset(sorted set)
 * `<k, s, v>`: `<k,v>` is unique and score is used for sorting (ascending order).
 
 | commands                                                      | usage                                                                                 |
@@ -144,88 +135,85 @@ pushing new elements on the head (on the left) or on the tail (on the right) of 
 | zcount <key><min><max>                                        | 统计该集合，分数区间内的元素个数                                                                      |
 | zrank <key><value>                                            | 返回该值在集合中的排名，从0开始。                                                                     |
 
-
 * data structure for zset
-  * hash is used to connect `value` and `score`, and keeps uniqueness of `<value, score>`
-  * skip list: sorting values based on score
-
+    * hash is used to connect `value` and `score`, and keeps uniqueness of `<value, score>`
+    * skip list: sorting values based on score
 
 ## Configuration
+
 * unit: only support bytes
 * case insensitive
 * network:
-  * bind:
-  * protected-mode:
-  * tcp-backlog:
-  * timeout: 0. If 0, always alive. 
-  * tcp-keepalive: 300 second. health check
+    * bind:
+    * protected-mode:
+    * tcp-backlog:
+    * timeout: 0. If 0, always alive.
+    * tcp-keepalive: 300 second. health check
 * general:
-  * daemonize: run as a daemon
-  * pidfile
-  * loglevel: debug / verbose / notice(default) /warning
-  * logfile
-  * databases: 16. Default is 0.
+    * daemonize: run as a daemon
+    * pidfile
+    * loglevel: debug / verbose / notice(default) /warning
+    * logfile
+    * databases: 16. Default is 0.
 * security:
-  * requirepass:
+    * requirepass:
 * limits:
-  * maxclients: 10_000 default
-  * maxmemory: 
-  * maxmemory-policy:
-    * volatile-lru: applied lru on keys with ttl
-    * allkeys-lru: applied lru on all keys
-    * volatile-random: random remove key from key set with ttl
-    * allkeys-random: random remove key from all keys
-    * volatile-ttl: remove min ttl keys
-    * noeviction: no removal. Will return error when write is full.
-  * maxmemory-samples: 
-
+    * maxclients: 10_000 default
+    * maxmemory:
+    * maxmemory-policy:
+        * volatile-lru: applied lru on keys with ttl
+        * allkeys-lru: applied lru on all keys
+        * volatile-random: random remove key from key set with ttl
+        * allkeys-random: random remove key from all keys
+        * volatile-ttl: remove min ttl keys
+        * noeviction: no removal. Will return error when write is full.
+    * maxmemory-samples:
 
 ## Redis pub / sub
 
 `SUBSCRIBE channel1`
 `PUBLISH channel1 hello`
 
-
 ## Redis new data types
+
 * Bitmaps
 * HyperLogLog
 * Geospatial
 
 ### Bitmaps
+
 `setbit<key><offset><value>设置Bitmaps中某个偏移量的值（0或1）`
 
 `getbit<key><offset>获取Bitmaps中某个偏移量的值`
 
 `bitcount<key>[start end] 统计字符串从start字节到end字节比特值为1的数量`
 
-
-bitop  and(or/not/xor) <destkey> [key…]
+bitop and(or/not/xor) <destkey> [key…]
 
 bitop是一个复合操作， 它可以做多个Bitmaps的and（交集） 、 or（并集） 、 not（非） 、 xor（异或） 操作并将结果保存在destkey中。
 
 example:
 `bitop and unique:users:and:20201104_03 unique:users:20201103unique:users:20201104`
 
-
-
 ### HyperLogLog
 
-A HyperLogLog is a probabilistic data structure used in order to count unique things (technically this is referred to 
-estimating the cardinality of a set). Usually counting unique items requires using an amount of memory proportional 
-to the number of items you want to count, because you need to remember the elements you have already seen in the past 
-in order to avoid counting them multiple times. However there is a set of algorithms that trade memory for precision: 
-you end with an estimated measure with a standard error, which in the case of the Redis implementation is less than 1%. 
-The magic of this algorithm is that you no longer need to use an amount of memory proportional to the number of items 
-counted, and instead can use a constant amount of memory! 12k bytes in the worst case, or a lot less if your HyperLogLog 
+A HyperLogLog is a probabilistic data structure used in order to count unique things (technically this is referred to
+estimating the cardinality of a set). Usually counting unique items requires using an amount of memory proportional
+to the number of items you want to count, because you need to remember the elements you have already seen in the past
+in order to avoid counting them multiple times. However there is a set of algorithms that trade memory for precision:
+you end with an estimated measure with a standard error, which in the case of the Redis implementation is less than 1%.
+The magic of this algorithm is that you no longer need to use an amount of memory proportional to the number of items
+counted, and instead can use a constant amount of memory! 12k bytes in the worst case, or a lot less if your HyperLogLog
 (We'll just call them HLL from now) has seen very few elements.
 
-HLLs in Redis, while technically a different data structure, are encoded as a Redis string, so you can call GET to 
+HLLs in Redis, while technically a different data structure, are encoded as a Redis string, so you can call GET to
 serialize a HLL, and SET to deserialize it back to the server.
 
-Conceptually the HLL API is like using Sets to do the same task. You would SADD every observed element into a set, and 
-would use SCARD to check the number of elements inside the set, which are unique since SADD will not re-add an existing element.
+Conceptually the HLL API is like using Sets to do the same task. You would SADD every observed element into a set, and
+would use SCARD to check the number of elements inside the set, which are unique since SADD will not re-add an existing
+element.
 
-While you don't really add items into an HLL, because the data structure only contains a state that does not include 
+While you don't really add items into an HLL, because the data structure only contains a state that does not include
 actual elements, the API is the same:
 
 ```
@@ -239,6 +227,7 @@ actual elements, the API is the same:
       (integer) 4
 
 ```
+
 `pfadd <key>< element> [element ...]   add element HyperLogLog 中`
 
 `pfcount<key> [key ...] count unique elements`
@@ -251,14 +240,11 @@ An example of use case for this data structure is counting unique queries perfor
 
 `geoadd<key>< longitude><latitude><member> [longitude latitude member...]   添加地理位置（经度，纬度，名称）`
 
-
 `geopos  <key><member> [member...]  获得指定地区的坐标值`
 
 `geodist<key><member1><member2>  [m|km|ft|mi ]  获取两个位置之间的直线距离`
 
-
 `georadius<key>< longitude><latitude>radius  m|km|ft|mi   以给定的经纬度为中心，找出某一半径内的元素`
-
 
 ## Jedis
 
