@@ -250,10 +250,54 @@ An example of use case for this data structure is counting unique queries perfor
 
 
 
+## Transactions
+Redis Transactions allow the execution of a group of commands in a single step, they are centered around the commands 
+`MULTI, EXEC, DISCARD` and `WATCH`. Redis Transactions make two important guarantees:
+   * All the commands in a transaction are serialized and executed sequentially. 
+     A request sent by another client will never be served in the middle of the execution of a Redis Transaction. 
+     This guarantees that the commands are executed as a single isolated operation.
 
+   * The EXEC command triggers the execution of all the commands in the transaction, so if a client loses the connection to 
+     the server in the context of a transaction before calling the EXEC command none of the operations are performed, instead if 
+     the EXEC command is called, all the operations are performed. When using the append-only file Redis makes sure to use a 
+     single write(2) syscall to write the transaction on disk. However if the Redis server crashes or is killed by the 
+     system administrator in some hard way it is possible that only a partial number of operations are registered. 
+     Redis will detect this condition at restart, and will exit with an error. Using the redis-check-aof tool it is possible to 
+     fix the append only file that will remove the partial transaction so that the server can start again.
 
+```
+> multi // start transaction
+> command1 // queued command1, but hasn't implemented yet
+> command2
+> ...
+> exec // execute all queued commands
+```
 
+```
+> multi // start transaction
+> command1 // queued command1, but hasn't implemented yet
+> command2
+> ...
+> discard // discard all queued commands
+```
 
+* Error in queued commands
+```
+> multi // start transaction
+> command1 // queued command1, but hasn't implemented yet
+> command2 // error
+> ...
+> exec // execute  aborted. Transaction discarded because of previous errors
+```
+
+* Error in exec commands
+```
+> multi // start transaction
+> command1 // queued command1, but hasn't implemented yet
+> command2 // queued successfully, but will occur error in execution
+> command3 // queued
+> exec // will exec command1 and command3, and only rollback command2 
+```
 
 
 
