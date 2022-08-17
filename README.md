@@ -1,22 +1,29 @@
 # Redis 6.2 Quickstart
 
-1. [Redis VS Memcached](#redis)
+## Contents
+1. [Redis VS Memcached](#redis-vs-memcached)
 2. [Setup](#setup)
-3. [Data Types](#data_types)
+3. [Data Types](#data-types)
    1. [Strings](#strings)
    2. [Lists](#lists)
    3. [Sets](#sets)
    4. [Hash](#hash)
-   5. [Zset](#zset)
+   5. [Zset](#zsetsorted-set)
+4. [Configuration](#configuration)
+5. [Redis pub / sub](#redis-pub-and-sub)
 
-## Redis VS Memcached  <a name="redis"></a>
+
+
+## Redis VS Memcached
 Redis
 
 * support more data types: `String, List, Set, Hash, Zset`, new types: `Bitmaps, HyperLogLog, Geospatial`.
 * support persistence
 * single-thread
 
-## Setup <a name="setup"></a>
+**[⬆ Back to top](#contents)**
+
+## Setup 
 1. Host Redis at local
    * [docker-compose file](redis-6.2/docker-compose.yml)
 
@@ -24,7 +31,10 @@ Redis
    * `docker exec -it <container_id> redis-cli`
        * example: `docker exec -it 534f0c59c14f5fad3945396574d3eabd61f570e1e8f2d089331c94b204413063 redis-cli`
 
-## Data Types <a name="data_types"></a>
+**[⬆ Back to top](#contents)**
+
+
+## Data Types 
 `key commands`
 
 | commands          | usage                                                                                 |
@@ -41,7 +51,9 @@ Redis
 | `flushdb`         | truncate current DB                                                                   |
 | `flushall`        | truncate all DBs                                                                      |
 
-### Strings <a name="strings"></a>
+**[⬆ Back to top](#contents)**
+
+### Strings 
 
 * Redis Strings are binary safe, this means that a Redis string can contain any kind of data, for instance a JPEG image
   or a serialized Ruby object.
@@ -67,7 +79,9 @@ Redis
 
 * String (value, not key) is stored as Simple Dynamic String(SDS) and mutable. It implements like Java ArrayList.
 
-### Lists <a name="lists"></a>
+**[⬆ Back to top](#contents)**
+
+### Lists 
 
 Redis Lists are simply lists of strings, sorted by insertion order. It is possible to add elements to a Redis List
 pushing new elements on the head (on the left) or on the tail (on the right) of the list, like double-linked list.
@@ -89,7 +103,9 @@ pushing new elements on the head (on the left) or on the tail (on the right) of 
 * `ziplist` is used when key has few elements
 * `quicklist` is used when key has more elements
 
-### Sets <a name="sets"></a>
+**[⬆ Back to top](#contents)**
+
+### Sets 
 
 * auto remove duplicates
 * unordered
@@ -111,7 +127,9 @@ pushing new elements on the head (on the left) or on the tail (on the right) of 
 
 * In Redis, set is implemented in data structure dict.
 
-### Hash <a name="hash"></a>
+**[⬆ Back to top](#contents)**
+
+### Hash 
 
 | commands                                          | usage                                                                |
 |---------------------------------------------------|----------------------------------------------------------------------|
@@ -124,7 +142,9 @@ pushing new elements on the head (on the left) or on the tail (on the right) of 
 | `hincrby <key><field><increment>`                 | increment 1 on value for the field in key set                        |
 | `hsetnx <key><field><value>`                      | add field to key set with value only an if only field does not exist |
 
-### Zset(sorted set) <a name="zset"></a>
+**[⬆ Back to top](#contents)**
+
+### Zset(sorted set) 
 * `<k, s, v>`: `<k,v>` is unique and score is used for sorting (ascending order).
 
 | commands                                                      | usage                                                                                 |
@@ -142,7 +162,9 @@ pushing new elements on the head (on the left) or on the tail (on the right) of 
     * hash is used to connect `value` and `score`, and keeps uniqueness of `<value, score>`
     * skip list: sorting values based on score
 
-## Configuration
+**[⬆ Back to top](#contents)**
+
+## Configuration 
 
 * unit: only support bytes
 * case insensitive
@@ -172,9 +194,13 @@ pushing new elements on the head (on the left) or on the tail (on the right) of 
         * noeviction: no removal. Will return error when write is full.
     * maxmemory-samples:
 
-## Redis pub / sub
+**[⬆ Back to top](#contents)**
+
+## Redis pub and sub  
 * `SUBSCRIBE channel1`
 * `PUBLISH channel1 hello`
+
+**[⬆ Back to top](#contents)**
 
 ## Redis new data types
 * Bitmaps
@@ -195,6 +221,8 @@ bitop是一个复合操作， 它可以做多个Bitmaps的and（交集） 、 or
 
 example:
 `bitop and unique:users:and:20201104_03 unique:users:20201103unique:users:20201104`
+
+**[⬆ Back to top](#contents)**
 
 ### HyperLogLog
 
@@ -235,6 +263,8 @@ actual elements, the API is the same:
 
 An example of use case for this data structure is counting unique queries performed by users in a search form every day.
 
+**[⬆ Back to top](#contents)**
+
 ### Geospatial
 
 `geoadd<key>< longitude><latitude><member> [longitude latitude member...]   添加地理位置（经度，纬度，名称）`
@@ -245,7 +275,11 @@ An example of use case for this data structure is counting unique queries perfor
 
 `georadius<key>< longitude><latitude>radius  m|km|ft|mi   以给定的经纬度为中心，找出某一半径内的元素`
 
+**[⬆ Back to top](#contents)**
+
 ## Jedis
+
+**[⬆ Back to top](#contents)**
 
 ## Transactions
 
@@ -361,3 +395,6 @@ when the EXEC was received, the entire transaction will be aborted instead.
 | 4     | `incrby 10`          | `incryby 20`                             |
 | 5     | `exec` // return 110 |                                          |
 | 6     |                      | `exec` // return nil (key did not exist) |
+
+
+**[⬆ Back to top](#contents)**
