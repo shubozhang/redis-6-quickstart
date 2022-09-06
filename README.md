@@ -25,7 +25,7 @@ Redis
 
 ## Setup 
 1. Host Redis at local
-   * [docker-compose file](redis-6.2/docker-compose.yml)
+   * [docker-compose file](docker-redis-6.2/docker-compose.yml)
 
 2. Access `redis-cli`
    * `docker exec -it <container_id> redis-cli`
@@ -398,3 +398,17 @@ when the EXEC was received, the entire transaction will be aborted instead.
 
 
 **[⬆ Back to top](#contents)**
+
+* 取消 WATCH 命令对所有 key 的监视。
+  如果在执行 WATCH 命令之后，EXEC 命令或DISCARD 命令先被执行了的话，那么就不需要再执行UNWATCH 了。
+
+
+Redis事务三特性
+单独的隔离操作
+事务中的所有命令都会序列化、按顺序地执行。事务在执行的过程中，不会被其他客户端发送来的命令请求所打断。
+没有隔离级别的概念
+队列中的命令没有提交之前都不会实际被执行，因为事务提交前任何指令都不会被实际执行
+不保证原子性
+事务中如果有一条命令执行失败，其后的命令仍然会被执行，没有回滚 
+
+
